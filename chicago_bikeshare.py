@@ -31,9 +31,9 @@ input("Press Enter to continue...")
 # TODO: Print the first 20 rows using a loop to identify the data.
 print("\n\nTASK 1: Printing the first 20 samples")
 
-for i in range(21):
-    print(str(i))
-    print(data_list[i])
+for item in range(21):
+    print(str(item))
+    print(data_list[item])
   
 # Let's change the data_list to remove the header from it.
 data_list = data_list[1:]
@@ -48,9 +48,9 @@ input("Press Enter to continue...")
 
 print("\nTASK 2: Printing the genders of the first 20 samples")
 
-for i in range(20):
-    print(str(i+1))
-    print(data_list[i][6])
+for item in range(20):
+    print(str(item + 1))
+    print(data_list[item][6])
 
 # Cool! We can get the rows(samples) iterating with a for and the columns(features) by index.
 # But it's still hard to get a column in a list. Example: List with all genders
@@ -69,10 +69,8 @@ def column_to_list(data, index):
     """ 
     column_list = []
     # Tip: You can use a for to iterate over the samples, get the feature by index and append into a list
-    for i in range(len(data)):
-        #print(str(i))
-        #print(data_list[i][6])
-        column_list.append(data[i][index])
+    for item in range(len(data)):
+        column_list.append(data[item][index])
     return column_list
 
 # Let's check with the genders if it's working (only the first 20)
@@ -92,10 +90,10 @@ input("Press Enter to continue...")
 male = 0
 female = 0
 
-for i in range(len(data_list)):
-    if data_list[i][-2]=="Male":
+for item in range(len(data_list)):
+    if data_list[item][-2]=="Male":
         male += 1
-    elif data_list[i][-2]=="Female":
+    elif data_list[item][-2]=="Female":
         female += 1
 
 # Checking the result
@@ -113,7 +111,7 @@ input("Press Enter to continue...")
 # TODO: Create a function to count the genders. Return a list
 # Should return a list with [count_male, counf_female] (e.g., [10, 15] means 10 Males, 15 Females)
 def count_gender(data_list):
-    """ Count the gender of a given list
+    """ Counts the gender of a given list
         Args:
             param1: List with the values 
         Returns:
@@ -122,10 +120,10 @@ def count_gender(data_list):
     male = 0
     female = 0
     
-    for i in range(len(data_list)):
-        if data_list[i][-2]=="Male":
+    for item in range(len(data_list)):
+        if data_list[item][-2]=="Male":
             male += 1
-        elif data_list[i][-2]=="Female":
+        elif data_list[item][-2]=="Female":
             female += 1
 
     return [male, female]
@@ -153,10 +151,10 @@ def most_popular_gender(data_list):
           String with the most popular gender
     """
     answer = ""
-    qtd = count_gender(data_list)
-    if qtd[0] > qtd[1]:
+    amount = count_gender(data_list)
+    if amount[0] > amount[1]:
         answer = "Male"
-    elif qtd[0] < qtd[1]:
+    elif amount[0] < amount[1]:
         answer = "Female"
     else:
         answer = "Equal"
@@ -187,9 +185,30 @@ input("Press Enter to continue...")
 # TODO: Plot a similar graph for user_types. Make sure the legend is correct.
 print("\nTASK 7: Check the chart!")
 
-gender_list = column_to_list(data_list, -3)
-types = ["Subscriber", "Customer"]
-quantity = count_gender(data_list)
+def count_user_types(data_list):
+    """ Counts the user_types of a given list
+        Args:
+            param1: List with the values 
+        Returns:
+          List with the user_types countings
+    """
+    customer = 0
+    subscriber = 0
+    dependent = 0
+    
+    for item in range(len(data_list)):
+        if data_list[item] == "Customer":
+            customer += 1
+        elif data_list[item] == "Subscriber":
+            subscriber += 1
+        elif data_list[item] == "Dependent":
+            dependent += 1 
+    
+    return [customer, subscriber, dependent]
+  
+user_type_list = column_to_list(data_list, -3)
+types = ["Subscriber", "Customer", "Dependent"]
+quantity = count_user_types(user_type_list)
 y_pos = list(range(len(types)))
 plt.bar(y_pos, quantity)
 plt.ylabel('Quantity')
@@ -224,34 +243,63 @@ mean_trip = 0.
 median_trip = 0.
 
 sum_trip = 0.
-min_trip = float(trip_duration_list[0])
-len_lst = len(trip_duration_list)
 
-for i in range(len_lst):
-   # print("Entering the loop -> valor de min_trip = " + str(min_trip) + ".... valor de i = " + str(trip_duration_list[i]) )
-    if float(trip_duration_list[i]) < min_trip:
-       # print("Min_trip is > i, change the value -> valor de min_trip = " + str(min_trip) + ".... valor de i = " + str(trip_duration_list[i]) )
-        min_trip = float(trip_duration_list[i] )
-    else:
-       # print("Min_trip is > i, dont change the value -> valor de min_trip = " + str(min_trip) + ".... valor de i = " + str(trip_duration_list[i]) )
-        min_trip = min_trip
+def min_max_sum_calculate(value_list):
+    """ Identifies the max and min value a given list. Also calculates the sum of the values.
+        Args:
+            param1: List with the values 
+        Returns:
+          Float the min value
+          Float the max value
+          Float the sum of the values
+    """   
+    sum_value = 0.
+    max_value = 0.
+    min_value = float(value_list[0])
+    len_list = len(value_list)
+        
+    for item in range(len_list):
+        #finding the min value
+        if float(value_list[item]) < min_value:
+            min_value = float(value_list[item] )
+        
+        #finding the max value 
+        if float(value_list[item]) > max_value:
+            max_value = float(value_list[item])
+
+        #calculating the amount
+        sum_value += float(value_list[item])
     
-    if float(trip_duration_list[i]) > max_trip:
-        max_trip = float(trip_duration_list[i])
+    return min_value, max_value, sum_value
 
-    sum_trip += float(trip_duration_list[i])
+def median_calculate(value_list):
+    """ Counts the user_types of a given list
+        Args:
+            param1: List with the values 
+        Returns:
+          List with the user_types countings
+    """
+    
+    #ordering the values
+    ordered_list = value_list
+    ordered_list.sort(key=int)
+    len_list = len(ordered_list)
+
+    if len_list % 2:
+        median = float(ordered_list[round(len_list / 2)])   
+    else:
+        median = float((ordered_list[round(len_list / 2)] + ordered_list[round(len_list / 2) - 1]) / 2.0)
+    
+    return median
+
+#finding the min, max and the sum of the values
+min_trip, max_trip, sum_trip = min_max_sum_calculate(trip_duration_list)
+
+#finding the median   
+median_trip = median_calculate(trip_duration_list)
 
 #finding the mean    
-mean_trip = sum_trip/len_lst
-
-#finding the median
-ordered_list = trip_duration_list
-ordered_list.sort(key=int)
-
-if len_lst % 2:
-    median_trip = float(ordered_list[round(len_lst / 2)])   
-else:
-    median_trip = float((ordered_list[round(len_lst / 2)] + ordered_list[round(len_lst / 2) - 1]) / 2.0)    
+mean_trip = sum_trip/len(trip_duration_list)
 
 print("\nTASK 9: Printing the min, max, mean and median")
 print("Min: ", min_trip, "Max: ", max_trip, "Mean: ", mean_trip, "Median: ", median_trip)
@@ -270,9 +318,9 @@ input("Press Enter to continue...")
 # TODO: Check types how many start_stations do we have using set()
 user_types = set()
 
-for i in column_to_list(data_list,3):
-    if i not in user_types:
-        user_types.add(i)
+for item in column_to_list(data_list,3):
+    if item not in user_types:
+        user_types.add(item)
 
 print("\nTASK 10: Printing start stations:")
 print(len(user_types))
@@ -305,25 +353,30 @@ print("Will you face it?")
 answer = "yes"
 
 def count_items(column_list):
+    """ Creates a new list with the unique values of a given list and the amount per value
+      Args:
+          param1: List with the values 
+      Returns:
+          List with the unique values
+          The amount per value
+    """
+
     item_types = []
     count_items = []
    
-    for i in range(len(column_list)):
-        if column_list[i] not in item_types:
-            item_types.append(column_list[i]) 
+   #Identifies the unique values
+    for item in range(len(column_list)):
+        if column_list[item] not in item_types:
+            item_types.append(column_list[item]) 
     
-    for j in range(len(item_types)):
+    #Identifies the amount per values
+    for item_type in range(len(item_types)):
         count = 0
-        #input("starting the j for...")
-        #print("inside the j for: count = " + str(count))
-        #input("item..." + str(item_types[j]))
-        for k in range(len(column_list)):
-           # print("inside the k for: count = " + str(count))
-            #print("item_types[j] = " + str(item_types[j]) + "..." + "column_list[k] = " + str(column_list[k]) )
-            if item_types[j] == column_list[k]:
-                count += 1
-                #print("inside the if: count = " + str(count))                 
-        count_items.append(count)       
+        for item_count in range(len(column_list)):
+            if item_types[item_type] == column_list[item_count]:
+                count += 1                            
+        count_items.append(count) 
+
     return item_types, count_items
 
 if answer == "yes":
